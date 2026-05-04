@@ -14,6 +14,7 @@
 - Use the `cn()` helper from `@/lib/utils` for all conditional classes.
 - Prefer descriptive variable names over short ones (e.g., `airQualityIndex` vs `aqi`).
 - All data fetching must use TanStack Query hooks.
+- Use Mobile-first development and BEM methodology for class names outside of tailwind classes.
 
 ## Component Structure
 

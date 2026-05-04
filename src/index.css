@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+@theme {
+  --color-aqi-good: #22c55e;
+  --color-aqi-mod:  #f59e0b;
+  --color-aqi-bad:  #ef4444;
+}
