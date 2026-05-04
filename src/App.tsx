@@ -20,7 +20,7 @@ function AirQualityApp() {
 
   const debouncedCity = useDebounce(inputValue.trim(), 300);
   const activeCity = debouncedCity.length >= 2 ? debouncedCity : null;
-  const { data, isLoading, isError, error } = useEnvironmentalData(activeCity);
+  const { data, isLoading, isError, error, dataUpdatedAt } = useEnvironmentalData(activeCity);
 
   useEffect(() => {
     if (data) addToHistory(data.city);
@@ -71,6 +71,7 @@ function AirQualityApp() {
           {data && !isLoading && (
             <AirQualityCard
               data={data}
+              updatedAt={dataUpdatedAt}
               onPin={() => handlePin(data.city)}
               isPinned={isPinned}
             />
