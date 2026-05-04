@@ -1,0 +1,15 @@
+{
+    "name": "Claude SPA Sandbox",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "esbenp.prettier-vscode",
+                "dbaeumer.vscode-eslint"
+            ]
+        }
+    },
+    "remoteUser": "node"
+}
