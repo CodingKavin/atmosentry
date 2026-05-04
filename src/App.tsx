@@ -7,7 +7,7 @@ import { AQISkeleton } from './components/AQISkeleton';
 import { ComparisonGrid } from './components/ComparisonGrid';
 import { AppErrorBoundary } from './components/ErrorBoundary';
 import { Logo } from './components/Logo';
-import { useAirQuality } from './hooks/useAirQuality';
+import { useEnvironmentalData } from './hooks/useEnvironmentalData';
 import { useDebounce } from './hooks/useDebounce';
 import { getPinnedCities, togglePin, addToHistory } from './utils/storage';
 import { cn } from './utils/cn';
@@ -22,7 +22,7 @@ function AirQualityApp() {
 
   const debouncedCity = useDebounce(inputValue.trim(), 300);
   const activeCity = debouncedCity.length >= 2 ? debouncedCity : null;
-  const { data, isLoading, isError, error } = useAirQuality(activeCity);
+  const { data, isLoading, isError, error } = useEnvironmentalData(activeCity);
 
   useEffect(() => {
     if (data) addToHistory(data.city);
@@ -44,7 +44,7 @@ function AirQualityApp() {
           <h1 className="text-2xl font-bold text-sky-400 tracking-tight leading-none">
             AtmoSentry
           </h1>
-          <p className="text-xs text-slate-500 mt-0.5">Real-time air quality</p>
+          <p className="text-xs text-slate-500 mt-0.5">Real-time air quality & weather</p>
         </div>
       </header>
 

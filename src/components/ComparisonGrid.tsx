@@ -1,10 +1,10 @@
 import { PinOff } from 'lucide-react';
-import { useAirQuality } from '../hooks/useAirQuality';
+import { useEnvironmentalData } from '../hooks/useEnvironmentalData';
 import { AirQualityCard } from './AirQualityCard';
 import { AQISkeleton } from './AQISkeleton';
 
 function PinnedCard({ city, onUnpin }: { city: string; onUnpin: () => void }) {
-  const { data, isLoading, isError, error } = useAirQuality(city);
+  const { data, isLoading, isError, error } = useEnvironmentalData(city);
 
   return (
     <div className="relative flex-1 min-w-72">
