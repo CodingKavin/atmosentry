@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Pin, PinOff } from 'lucide-react';
 import { SearchBar } from './components/SearchBar';
 import { AirQualityCard } from './components/AirQualityCard';
 import { AQISkeleton } from './components/AQISkeleton';
@@ -10,7 +9,6 @@ import { Logo } from './components/Logo';
 import { useEnvironmentalData } from './hooks/useEnvironmentalData';
 import { useDebounce } from './hooks/useDebounce';
 import { getPinnedCities, togglePin, addToHistory } from './utils/storage';
-import { cn } from './utils/cn';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1 } },
@@ -36,58 +34,58 @@ function AirQualityApp() {
     ? pinnedCities.some(c => c.toLowerCase() === data.city.toLowerCase())
     : false;
 
+  const hasContent = isLoading || isError || !!data;
+
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col items-center px-4 pt-12 pb-20 gap-8">
-      <header className="flex items-center gap-3">
-        <Logo size={40} />
-        <div>
-          <h1 className="text-2xl font-bold text-sky-400 tracking-tight leading-none">
-            AtmoSentry
-          </h1>
-          <p className="text-xs text-slate-500 mt-0.5">Real-time air quality & weather</p>
-        </div>
-      </header>
-
-      <SearchBar value={inputValue} onChange={setInputValue} isLoading={isLoading} />
-
-      <AppErrorBoundary>
-        {isLoading && <AQISkeleton />}
-
-        {isError && !isLoading && (
-          <div className="w-full max-w-md rounded-xl bg-red-950/50 ring-1 ring-red-800 px-4 py-3 text-sm text-red-400">
-            {error.message}
+    <div className="min-h-screen bg-slate-900 flex flex-col">
+      {/* Hero zone: vertically centered on empty state, compact at top once results appear */}
+      <div className={
+        hasContent
+          ? 'flex flex-col items-center gap-6 w-full px-4 pt-12 pb-6'
+          : 'flex flex-col items-center gap-6 w-full px-4 flex-1 justify-center min-h-[80vh]'
+      }>
+        <header className="flex items-center gap-3">
+          <Logo size={40} />
+          <div>
+            <h1 className="text-2xl font-bold text-sky-400 tracking-tight leading-none">
+              AtmoSentry
+            </h1>
+            <p className="text-xs text-slate-500 mt-0.5">Real-time air quality & weather</p>
           </div>
-        )}
+        </header>
 
-        {data && !isLoading && (
-          <div className="w-full max-w-md space-y-3">
-            <AirQualityCard data={data} />
-            <button
-              onClick={() => handlePin(data.city)}
-              className={cn(
-                'w-full rounded-xl py-2.5 text-sm font-medium transition-colors flex items-center justify-center gap-2',
-                isPinned
-                  ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                  : 'bg-sky-500/10 text-sky-400 ring-1 ring-sky-500/30 hover:bg-sky-500/20',
-              )}
-            >
-              {isPinned
-                ? <><PinOff className="size-3.5" /> Unpin city</>
-                : <><Pin className="size-3.5" /> Pin for comparison</>
-              }
-            </button>
-          </div>
-        )}
-      </AppErrorBoundary>
+        <SearchBar value={inputValue} onChange={setInputValue} isLoading={isLoading} />
+      </div>
 
-      {pinnedCities.length > 0 && (
-        <section className="w-full max-w-5xl space-y-4">
-          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">
-            Comparison — {pinnedCities.length} {pinnedCities.length === 1 ? 'city' : 'cities'}
-          </h2>
-          <ComparisonGrid cities={pinnedCities} onUnpin={handlePin} />
-        </section>
-      )}
+      {/* Content zone */}
+      <div className="flex flex-col items-center gap-8 px-4 pb-20">
+        <AppErrorBoundary>
+          {isLoading && <AQISkeleton />}
+
+          {isError && !isLoading && (
+            <div className="w-full max-w-md rounded-xl bg-red-950/50 ring-1 ring-red-800 px-4 py-3 text-sm text-red-400">
+              {error.message}
+            </div>
+          )}
+
+          {data && !isLoading && (
+            <AirQualityCard
+              data={data}
+              onPin={() => handlePin(data.city)}
+              isPinned={isPinned}
+            />
+          )}
+        </AppErrorBoundary>
+
+        {pinnedCities.length > 0 && (
+          <section className="w-full max-w-5xl space-y-4">
+            <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">
+              Comparison — {pinnedCities.length} {pinnedCities.length === 1 ? 'city' : 'cities'}
+            </h2>
+            <ComparisonGrid cities={pinnedCities} onUnpin={handlePin} />
+          </section>
+        )}
+      </div>
     </div>
   );
 }

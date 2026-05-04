@@ -1,4 +1,3 @@
-import { PinOff } from 'lucide-react';
 import { useEnvironmentalData } from '../hooks/useEnvironmentalData';
 import { AirQualityCard } from './AirQualityCard';
 import { AQISkeleton } from './AQISkeleton';
@@ -7,7 +6,7 @@ function PinnedCard({ city, onUnpin }: { city: string; onUnpin: () => void }) {
   const { data, isLoading, isError, error } = useEnvironmentalData(city);
 
   return (
-    <div className="relative flex-1 min-w-72">
+    <div className="flex-1 min-w-72">
       {isLoading && <AQISkeleton />}
 
       {isError && (
@@ -17,16 +16,7 @@ function PinnedCard({ city, onUnpin }: { city: string; onUnpin: () => void }) {
       )}
 
       {data && !isLoading && (
-        <div className="relative">
-          <AirQualityCard data={data} />
-          <button
-            onClick={onUnpin}
-            title={`Unpin ${city}`}
-            className="absolute -top-2 -right-2 rounded-full bg-slate-700 p-1.5 text-slate-400 hover:text-red-400 hover:bg-slate-600 transition-colors ring-1 ring-slate-600"
-          >
-            <PinOff className="size-3.5" />
-          </button>
-        </div>
+        <AirQualityCard data={data} onPin={onUnpin} isPinned={true} />
       )}
     </div>
   );
