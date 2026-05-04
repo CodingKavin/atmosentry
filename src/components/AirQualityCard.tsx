@@ -34,11 +34,12 @@ const levelBg: Record<AqiLevel, string> = {
 
 interface AirQualityCardProps {
   data: EnvironmentalData;
+  updatedAt: number;
   onPin?: () => void;
   isPinned?: boolean;
 }
 
-export function AirQualityCard({ data, onPin, isPinned = false }: AirQualityCardProps) {
+export function AirQualityCard({ data, updatedAt, onPin, isPinned = false }: AirQualityCardProps) {
   const { city, country, current, weather } = data;
   const level = aqiLevel(current.us_aqi);
 
@@ -113,7 +114,7 @@ export function AirQualityCard({ data, onPin, isPinned = false }: AirQualityCard
       )}
 
       <p className="text-xs text-slate-500 text-right">
-        Updated {new Date(current.time).toLocaleTimeString()}
+        Updated {new Date(updatedAt).toLocaleTimeString()}
       </p>
     </div>
   );

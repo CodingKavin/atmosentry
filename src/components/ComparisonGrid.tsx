@@ -3,7 +3,7 @@ import { AirQualityCard } from './AirQualityCard';
 import { AQISkeleton } from './AQISkeleton';
 
 function PinnedCard({ city, onUnpin }: { city: string; onUnpin: () => void }) {
-  const { data, isLoading, isError, error } = useEnvironmentalData(city);
+  const { data, isLoading, isError, error, dataUpdatedAt } = useEnvironmentalData(city);
 
   return (
     <div className="flex-1 min-w-72">
@@ -16,7 +16,7 @@ function PinnedCard({ city, onUnpin }: { city: string; onUnpin: () => void }) {
       )}
 
       {data && !isLoading && (
-        <AirQualityCard data={data} onPin={onUnpin} isPinned={true} />
+        <AirQualityCard data={data} updatedAt={dataUpdatedAt} onPin={onUnpin} isPinned={true} />
       )}
     </div>
   );
