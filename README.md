@@ -1,4 +1,4 @@
-# AtmosEntry
+# AtmoSentry
 
 A lightweight, real-time Air Quality Index (AQI) and weather tracking application. Built with React and TypeScript to provide instant environmental insights for cities worldwide.
 
