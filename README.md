@@ -1,11 +1,11 @@
 # AtmosEntry
 
-A lightweight, real-time Air Quality Index (AQI) tracking application. Built with React and TypeScript to provide instant environmental insights for cities worldwide.
+A lightweight, real-time Air Quality Index (AQI) and weather tracking application. Built with React and TypeScript to provide instant environmental insights for cities worldwide.
 
 ## Features
 
-- **Global Search:** Find air quality data for any major city.
-- **Real-time Metrics:** View AQI levels, PM2.5, PM10, and other key pollutants.
+- **Global Search:** Find air quality and weather data for any major city.
+- **Real-time Metrics:** View AQI levels, PM2.5, PM10, and other key pollutants, temperature, wind, humidity.
 - **Responsive Design:** Clean, data-oriented visualization optimized for all devices.
 
 ## Tech Stack & Methodology
