@@ -10,9 +10,19 @@ A lightweight, real-time Air Quality Index (AQI) tracking application. Built wit
 
 ## Tech Stack & Methodology
 
-- **AI Orchestration:** Developed using **Claude Code** (Anthropic) as a primary pair-programmer.
-- **Security Architecture:** Implemented a **Dockerized WSL2 Sandbox** to isolate the AI agent, ensuring secure file access and environment control.
-- **Frontend:** React 19 + TypeScript + Vite.
+- **AI Orchestration & Agentic Workflow:**
+  - Developed using **Claude Code** (Anthropic CLI) as an autonomous pair-programmer.
+  - Implemented a `CLAUDE.md` context-steering file to enforce strict coding standards, naming conventions, and architectural consistency across AI-generated sessions.
+- **Security & Infrastructure:**
+  - **Dockerized Dev Container:** Isolated the development environment within a specialized sandbox to manage AI file-system permissions securely.
+  - **WSL2 Integration:** Leveraged a Linux-backend bridge for high-performance file syncing and containerized dependency management.
+- **Frontend Architecture:**
+  - **Core:** React 19 + TypeScript + Vite.
+  - **State & Data Fetching:** **TanStack Query (v5)** for efficient server-state management, caching, and loading states.
+  - **Styling & UI:**
+    - **Tailwind CSS** for utility-first design.
+    - **clsx & tailwind-merge:** Implemented a custom `cn` helper utility to manage dynamic class merging and resolve CSS specificity conflicts.
+  - **Iconography:** Lucide React for accessible, vector-based visual cues.
 
 ## Getting Started
 
