@@ -6,11 +6,42 @@ export const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast';
 
 export const mockGeo = {
   results: [{
+    id: 2643743,
     name: 'London',
+    admin1: 'England',
     latitude: 51.5074,
     longitude: -0.1278,
     country: 'United Kingdom',
   }],
+};
+
+export const mockGeoMultiple = {
+  results: [
+    {
+      id: 2643743,
+      name: 'London',
+      admin1: 'England',
+      latitude: 51.5074,
+      longitude: -0.1278,
+      country: 'United Kingdom',
+    },
+    {
+      id: 6058560,
+      name: 'London',
+      admin1: 'Ontario',
+      latitude: 42.9837,
+      longitude: -81.2497,
+      country: 'Canada',
+    },
+    {
+      id: 5089178,
+      name: 'Londonderry',
+      admin1: 'New Hampshire',
+      latitude: 42.8651,
+      longitude: -71.3742,
+      country: 'United States',
+    },
+  ],
 };
 
 export const mockAq = {

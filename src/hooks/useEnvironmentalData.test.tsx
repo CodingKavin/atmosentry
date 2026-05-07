@@ -4,8 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
 import type { ReactNode } from 'react';
 import { server } from '../test/server';
-import { GEO_URL, AQ_URL, WEATHER_URL } from '../test/handlers';
+import { AQ_URL, WEATHER_URL } from '../test/handlers';
 import { useEnvironmentalData } from './useEnvironmentalData';
+import type { GeoResult } from '../types/geo';
 
 function makeWrapper() {
   const qc = new QueryClient({
@@ -16,9 +17,23 @@ function makeWrapper() {
   );
 }
 
+const londonUK: GeoResult = {
+  name: 'London',
+  country: 'United Kingdom',
+  latitude: 51.5074,
+  longitude: -0.1278,
+};
+
+const londonCA: GeoResult = {
+  name: 'London',
+  country: 'Canada',
+  latitude: 42.9837,
+  longitude: -81.2497,
+};
+
 describe('useEnvironmentalData', () => {
-  it('a) 200 OK — resolves with AQI and weather', async () => {
-    const { result } = renderHook(() => useEnvironmentalData('London'), {
+  it('a) resolves with AQI and weather for a selected location', async () => {
+    const { result } = renderHook(() => useEnvironmentalData(londonUK), {
       wrapper: makeWrapper(),
     });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -30,9 +45,20 @@ describe('useEnvironmentalData', () => {
     expect(result.current.data?.weather?.wind_speed_10m).toBe(12.5);
   });
 
-  it('b) Weather API fails — resolves with weather: undefined (graceful degradation)', async () => {
+  it('b) uses exact coordinates and metadata from the selected GeoResult', async () => {
+    const { result } = renderHook(() => useEnvironmentalData(londonCA), {
+      wrapper: makeWrapper(),
+    });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data?.city).toBe('London');
+    expect(result.current.data?.country).toBe('Canada');
+    expect(result.current.data?.latitude).toBe(42.9837);
+    expect(result.current.data?.longitude).toBe(-81.2497);
+  });
+
+  it('c) Weather API fails — resolves with weather: undefined (graceful degradation)', async () => {
     server.use(http.get(WEATHER_URL, () => new HttpResponse(null, { status: 500 })));
-    const { result } = renderHook(() => useEnvironmentalData('London'), {
+    const { result } = renderHook(() => useEnvironmentalData(londonUK), {
       wrapper: makeWrapper(),
     });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -41,25 +67,16 @@ describe('useEnvironmentalData', () => {
     expect(result.current.data?.weather).toBeUndefined();
   });
 
-  it('c) AQ API fails (500) — surfaces error', async () => {
+  it('d) AQ API fails (500) — surfaces error', async () => {
     server.use(http.get(AQ_URL, () => new HttpResponse(null, { status: 500 })));
-    const { result } = renderHook(() => useEnvironmentalData('London'), {
+    const { result } = renderHook(() => useEnvironmentalData(londonUK), {
       wrapper: makeWrapper(),
     });
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.error?.message).toMatch(/air quality/i);
   });
 
-  it('d) City not found — surfaces "not found" error', async () => {
-    server.use(http.get(GEO_URL, () => HttpResponse.json({ results: [] })));
-    const { result } = renderHook(() => useEnvironmentalData('Atlantis'), {
-      wrapper: makeWrapper(),
-    });
-    await waitFor(() => expect(result.current.isError).toBe(true));
-    expect(result.current.error?.message).toMatch(/not found/i);
-  });
-
-  it('e) null city — stays idle', () => {
+  it('e) null location — stays idle', () => {
     const { result } = renderHook(() => useEnvironmentalData(null), {
       wrapper: makeWrapper(),
     });

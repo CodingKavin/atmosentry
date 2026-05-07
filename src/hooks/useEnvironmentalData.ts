@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import type { AirQualityData } from './useAirQuality';
+import type { GeoResult } from '../types/geo';
 
 export interface WeatherCurrent {
   time: string;
@@ -13,16 +14,8 @@ export interface EnvironmentalData extends AirQualityData {
   weather?: WeatherCurrent;
 }
 
-const GEO_API     = 'https://geocoding-api.open-meteo.com/v1/search';
 const AQ_API      = 'https://air-quality-api.open-meteo.com/v1/air-quality';
 const WEATHER_API = 'https://api.open-meteo.com/v1/forecast';
-
-interface GeoResult {
-  name: string;
-  latitude: number;
-  longitude: number;
-  country: string;
-}
 
 function handleAxiosError(serviceMsg: string) {
   return (err: unknown): never => {
@@ -33,17 +26,6 @@ function handleAxiosError(serviceMsg: string) {
     }
     throw err;
   };
-}
-
-async function geocodeCity(city: string): Promise<GeoResult> {
-  const res = await axios
-    .get<{ results?: GeoResult[] }>(GEO_API, {
-      params: { name: city, count: 1, language: 'en', format: 'json' },
-    })
-    .catch(handleAxiosError('Geocoding service error'));
-  const loc = res.data.results?.[0];
-  if (!loc) throw new Error(`City "${city}" not found`);
-  return loc;
 }
 
 async function fetchAQByCoords(lat: number, lon: number): Promise<AirQualityData['current']> {
@@ -74,27 +56,26 @@ async function tryFetchWeather(lat: number, lon: number): Promise<WeatherCurrent
   }
 }
 
-async function fetchEnvironmentalData(city: string): Promise<EnvironmentalData> {
-  const loc = await geocodeCity(city);
+async function fetchEnvironmentalData(location: GeoResult): Promise<EnvironmentalData> {
   const [aq, weather] = await Promise.all([
-    fetchAQByCoords(loc.latitude, loc.longitude),
-    tryFetchWeather(loc.latitude, loc.longitude),
+    fetchAQByCoords(location.latitude, location.longitude),
+    tryFetchWeather(location.latitude, location.longitude),
   ]);
   return {
-    city: loc.name,
-    country: loc.country,
-    latitude: loc.latitude,
-    longitude: loc.longitude,
+    city: location.name,
+    country: location.country,
+    latitude: location.latitude,
+    longitude: location.longitude,
     current: aq,
     weather,
   };
 }
 
-export function useEnvironmentalData(city: string | null) {
+export function useEnvironmentalData(location: GeoResult | null) {
   return useQuery<EnvironmentalData, Error>({
-    queryKey: ['environmental', city],
-    queryFn: () => fetchEnvironmentalData(city!),
-    enabled: !!city,
+    queryKey: ['environmental', location?.latitude, location?.longitude],
+    queryFn: () => fetchEnvironmentalData(location!),
+    enabled: !!location,
     staleTime: 60 * 60 * 1000,
   });
 }
