@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SearchBar } from './SearchBar';
-import type { GeoResult } from '../types/geo';
+import type { GeoResult } from '../../types/geo';
 
 const londonUK: GeoResult = {
   id: 2643743,
