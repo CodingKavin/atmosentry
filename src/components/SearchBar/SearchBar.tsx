@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Search, X, Loader2 } from 'lucide-react';
-import { cn } from '../utils/cn';
-import type { GeoResult } from '../types/geo';
+import { cn } from '../../utils/cn';
+import type { GeoResult } from '../../types/geo';
 
 interface Props {
   value: string;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SearchBar } from './components/SearchBar';
+import { SearchBar } from './components/SearchBar/SearchBar';
 import { AirQualityCard } from './components/AirQualityCard';
 import { AQISkeleton } from './components/AQISkeleton';
 import { ComparisonGrid } from './components/ComparisonGrid';
