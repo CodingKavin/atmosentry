@@ -56,7 +56,7 @@ export function togglePin(location: GeoResult): GeoResult[] {
   const exists = prev.some(l => locationKey(l) === key);
   const next = exists
     ? prev.filter(l => locationKey(l) !== key)
-    : [...prev, location];
+    : [...prev, location].slice(-2);
   write(PINS_KEY, next);
   return next;
 }
