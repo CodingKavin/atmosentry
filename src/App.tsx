@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SearchBar } from './components/SearchBar';
+import { SearchBar } from './components/SearchBar/SearchBar';
 import { AirQualityCard } from './components/AirQualityCard';
 import { AQISkeleton } from './components/AQISkeleton';
 import { ComparisonGrid } from './components/ComparisonGrid';
 import { AppErrorBoundary } from './components/ErrorBoundary';
 import { Logo } from './components/Logo';
 import { useEnvironmentalData } from './hooks/useEnvironmentalData';
+import { useGeoSearch } from './hooks/useGeoSearch';
 import { useDebounce } from './hooks/useDebounce';
-import { getPinnedCities, togglePin, addToHistory } from './utils/storage';
+import { getPinnedLocations, togglePin, addToHistory } from './utils/storage';
+import type { GeoResult } from './types/geo';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1 } },
@@ -16,29 +18,46 @@ const queryClient = new QueryClient({
 
 function AirQualityApp() {
   const [inputValue, setInputValue] = useState('');
-  const [pinnedCities, setPinnedCities] = useState<string[]>(() => getPinnedCities());
+  const [selectedLocation, setSelectedLocation] = useState<GeoResult | null>(null);
+  const [pinnedLocations, setPinnedLocations] = useState<GeoResult[]>(() => getPinnedLocations());
 
-  const debouncedCity = useDebounce(inputValue.trim(), 300);
-  const activeCity = debouncedCity.length >= 2 ? debouncedCity : null;
-  const { data, isLoading, isError, error, dataUpdatedAt } = useEnvironmentalData(activeCity);
+  const debouncedQuery = useDebounce(inputValue.trim(), 300);
+  // Only search while user is actively typing (not after a selection)
+  const searchQuery = !selectedLocation && debouncedQuery.length >= 2 ? debouncedQuery : null;
+
+  const { data: searchResults, isFetching: isSearching } = useGeoSearch(searchQuery);
+  const { data, isLoading, isError, error, dataUpdatedAt } = useEnvironmentalData(selectedLocation);
 
   useEffect(() => {
     if (data) addToHistory(data.city);
   }, [data]);
 
-  function handlePin(city: string) {
-    setPinnedCities(togglePin(city));
+  function handleSelect(location: GeoResult) {
+    setSelectedLocation(location);
+    setInputValue(location.name);
   }
 
-  const isPinned = data
-    ? pinnedCities.some(c => c.toLowerCase() === data.city.toLowerCase())
+  function handleInputChange(value: string) {
+    setInputValue(value);
+    if (selectedLocation) setSelectedLocation(null);
+  }
+
+  function handlePin(location: GeoResult) {
+    setPinnedLocations(togglePin(location));
+  }
+
+  const pinnedKey = (loc: GeoResult) => `${loc.latitude},${loc.longitude}`;
+  const isPinned = selectedLocation
+    ? pinnedLocations.some(l => pinnedKey(l) === pinnedKey(selectedLocation))
     : false;
 
   const hasContent = isLoading || isError || !!data;
 
+  // Pass results only while actively searching (not after a selection)
+  const dropdownResults = searchQuery ? searchResults : undefined;
+
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col">
-      {/* Hero zone: vertically centered on empty state, compact at top once results appear */}
       <div className={
         hasContent
           ? 'flex flex-col items-center gap-6 w-full px-4 pt-12 pb-6'
@@ -54,10 +73,16 @@ function AirQualityApp() {
           </div>
         </header>
 
-        <SearchBar value={inputValue} onChange={setInputValue} isLoading={isLoading} />
+        <SearchBar
+          value={inputValue}
+          onChange={handleInputChange}
+          onSelect={handleSelect}
+          results={dropdownResults}
+          isSearching={isSearching}
+          isLoading={isLoading}
+        />
       </div>
 
-      {/* Content zone */}
       <div className="flex flex-col items-center gap-8 px-4 pb-20">
         <AppErrorBoundary>
           {isLoading && <AQISkeleton />}
@@ -72,18 +97,18 @@ function AirQualityApp() {
             <AirQualityCard
               data={data}
               updatedAt={dataUpdatedAt}
-              onPin={() => handlePin(data.city)}
+              onPin={() => selectedLocation && handlePin(selectedLocation)}
               isPinned={isPinned}
             />
           )}
         </AppErrorBoundary>
 
-        {pinnedCities.length > 0 && (
+        {pinnedLocations.length > 0 && (
           <section className="w-full max-w-5xl space-y-4">
             <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-1">
-              Comparison — {pinnedCities.length} {pinnedCities.length === 1 ? 'city' : 'cities'}
+              Comparison — {pinnedLocations.length} {pinnedLocations.length === 1 ? 'city' : 'cities'}
             </h2>
-            <ComparisonGrid cities={pinnedCities} onUnpin={handlePin} />
+            <ComparisonGrid locations={pinnedLocations} onUnpin={handlePin} />
           </section>
         )}
       </div>

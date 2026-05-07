@@ -1,9 +1,10 @@
 import { useEnvironmentalData } from '../hooks/useEnvironmentalData';
 import { AirQualityCard } from './AirQualityCard';
 import { AQISkeleton } from './AQISkeleton';
+import type { GeoResult } from '../types/geo';
 
-function PinnedCard({ city, onUnpin }: { city: string; onUnpin: () => void }) {
-  const { data, isLoading, isError, error, dataUpdatedAt } = useEnvironmentalData(city);
+function PinnedCard({ location, onUnpin }: { location: GeoResult; onUnpin: () => void }) {
+  const { data, isLoading, isError, error, dataUpdatedAt } = useEnvironmentalData(location);
 
   return (
     <div className="flex-1 min-w-72">
@@ -23,15 +24,19 @@ function PinnedCard({ city, onUnpin }: { city: string; onUnpin: () => void }) {
 }
 
 interface ComparisonGridProps {
-  cities: string[];
-  onUnpin: (city: string) => void;
+  locations: GeoResult[];
+  onUnpin: (location: GeoResult) => void;
 }
 
-export function ComparisonGrid({ cities, onUnpin }: ComparisonGridProps) {
+export function ComparisonGrid({ locations, onUnpin }: ComparisonGridProps) {
   return (
     <div className="flex flex-col md:flex-row gap-4 flex-wrap w-full">
-      {cities.map(city => (
-        <PinnedCard key={city} city={city} onUnpin={() => onUnpin(city)} />
+      {locations.map(location => (
+        <PinnedCard
+          key={`${location.latitude}-${location.longitude}`}
+          location={location}
+          onUnpin={() => onUnpin(location)}
+        />
       ))}
     </div>
   );

@@ -1,3 +1,5 @@
+import type { GeoResult } from '../types/geo';
+
 const HISTORY_KEY = 'as:history';
 const PINS_KEY    = 'as:pins';
 const TTL_MS      = 60 * 60 * 1000; // 1 hour
@@ -40,16 +42,21 @@ export function addToHistory(city: string): void {
   write(HISTORY_KEY, next);
 }
 
-export function getPinnedCities(): string[] {
-  return read<string[]>(PINS_KEY) ?? [];
+function locationKey(loc: GeoResult): string {
+  return `${loc.latitude},${loc.longitude}`;
 }
 
-export function togglePin(city: string): string[] {
-  const prev = getPinnedCities();
-  const exists = prev.some(c => c.toLowerCase() === city.toLowerCase());
+export function getPinnedLocations(): GeoResult[] {
+  return read<GeoResult[]>(PINS_KEY) ?? [];
+}
+
+export function togglePin(location: GeoResult): GeoResult[] {
+  const prev = getPinnedLocations();
+  const key = locationKey(location);
+  const exists = prev.some(l => locationKey(l) === key);
   const next = exists
-    ? prev.filter(c => c.toLowerCase() !== city.toLowerCase())
-    : [...prev, city];
+    ? prev.filter(l => locationKey(l) !== key)
+    : [...prev, location];
   write(PINS_KEY, next);
   return next;
 }
