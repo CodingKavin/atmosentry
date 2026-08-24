@@ -121,6 +121,31 @@ Handlers reset automatically via `afterEach(() => server.resetHandlers())` in `s
 
 ---
 
+## Development Workflow
+
+### One File at a Time (Required)
+
+When implementing features, always follow this sequence — **never generate multiple files in one turn without explicit approval**:
+
+1. **Propose** — briefly describe what the file will do and its public interface; wait for approval before writing
+2. **Implement** — write the source file only
+3. **Pause** — explicitly state "Ready to generate the colocated test file — confirm to proceed" and wait
+4. **Test scaffold** — generate the colocated `.test.tsx` with happy-path and known edge cases, then pause again
+5. **User additions** — wait for the user to add their own boundary conditions / edge cases before moving on
+6. **Next file** — only proceed to the next file after the user confirms the current one is done
+
+Never batch multiple source files or multiple test files in a single response.
+
+### Test Scaffold Structure
+
+Each generated test file must include:
+
+- A `// TODO: add your edge cases below` comment block after the generated cases
+- Clearly labelled sections: `// --- happy path ---`, `// --- error states ---`, `// --- edge cases ---`
+- Only stub out cases Claude cannot fully specify (e.g., requires knowledge of real API shape) — mark them `test.todo(...)`
+
+---
+
 ## File Structure
 
 ```

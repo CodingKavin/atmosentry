@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Typography } from './components/Typography/Typography';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SearchBar } from './components/SearchBar/SearchBar';
 import { AirQualityCard } from './components/AirQualityCard';
@@ -63,13 +64,15 @@ function AirQualityApp() {
           ? 'flex flex-col items-center gap-6 w-full px-4 pt-12 pb-6'
           : 'flex flex-col items-center gap-6 w-full px-4 flex-1 justify-center min-h-[80vh]'
       }>
-        <header className="flex items-center gap-3">
-          <Logo size={40} />
+        <header className="flex items-center gap-5">
+          <Logo size={52} />
           <div>
-            <h1 className="text-2xl font-bold text-sky-400 tracking-tight leading-none">
+            <Typography variant="appTitle" as="h1" className="font-bold text-sky-400 tracking-tight leading-none">
               AtmoSentry
-            </h1>
-            <p className="text-xs text-slate-500 mt-0.5">Real-time air quality & weather</p>
+            </Typography>
+            <Typography variant="appSub" as="p" className="text-slate-400 mt-0.5">
+              Real-time air quality & weather
+            </Typography>
           </div>
         </header>
 

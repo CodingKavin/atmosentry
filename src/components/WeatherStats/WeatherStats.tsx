@@ -1,4 +1,5 @@
 import { Thermometer, Droplets, Wind } from 'lucide-react';
+import { Typography } from '../Typography/Typography';
 import type { WeatherCurrent } from '../../hooks/useEnvironmentalData';
 
 interface WeatherStatsProps {
@@ -13,14 +14,14 @@ export function WeatherStats({ data }: WeatherStatsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-3 gap-3 md:gap-4">
       {metrics.map(({ Icon, label, value }) => (
-        <div key={label} className="rounded-xl bg-slate-900/60 p-3 space-y-1">
+        <div key={label} className="rounded-xl bg-slate-900/60 p-3 md:p-4 space-y-1">
           <div className="flex items-center gap-1.5 text-slate-400">
-            <Icon className="size-3.5" />
-            <span className="text-xs">{label}</span>
+            <Icon className="size-3.5 md:size-4 shrink-0" />
+            <Typography variant="metricLabel">{label}</Typography>
           </div>
-          <p className="text-sm font-semibold text-slate-100">{value}</p>
+          <Typography variant="metricSm" as="p" className="font-semibold text-slate-100">{value}</Typography>
         </div>
       ))}
     </div>
