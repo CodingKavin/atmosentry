@@ -1,4 +1,5 @@
 import { cn } from '../../utils/cn';
+import { Typography } from '../Typography/Typography';
 
 interface AQIScaleBarProps {
   aqiValue: number;
@@ -52,13 +53,13 @@ export function AQIScaleBar({ aqiValue }: AQIScaleBarProps) {
               isActive ? activeStyles[color] : 'opacity-40',
             )}
           >
-            <div className={cn('size-2 rounded-full', dotColor[color])} />
-            <span className={cn(
-              'text-[10px] leading-tight text-center',
-              isActive ? 'font-semibold' : 'text-slate-400',
-            )}>
+            <div className={cn('size-2 md:size-2.5 rounded-full', dotColor[color])} />
+            <Typography
+              variant="scaleLbl"
+              className={cn('leading-tight text-center', isActive ? 'font-semibold' : 'text-slate-400')}
+            >
               {label}
-            </span>
+            </Typography>
           </div>
         );
       })}

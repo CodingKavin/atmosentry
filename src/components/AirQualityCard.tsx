@@ -3,6 +3,7 @@ import { cn } from '../utils/cn';
 import { WeatherStats } from './WeatherStats/WeatherStats';
 import { AQIScaleBar } from './AQIScaleBar/AQIScaleBar';
 import { Tooltip } from './Tooltip/Tooltip';
+import { Typography } from './Typography/Typography';
 import type { EnvironmentalData } from '../hooks/useEnvironmentalData';
 
 type AqiLevel = 'good' | 'mod' | 'bad';
@@ -53,9 +54,9 @@ export function AirQualityCard({ data, updatedAt, onPin, isPinned = false }: Air
   ];
 
   return (
-    <div className="relative w-full max-w-md rounded-2xl bg-slate-800 ring-1 ring-slate-700 p-6 space-y-5">
+    <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl rounded-2xl bg-slate-800 ring-1 ring-slate-700 p-6 md:p-8 space-y-5 md:space-y-6">
 
-      {/* Pin / Unpin — anchored to top-right corner of the card */}
+      {/* Pin / Unpin */}
       {onPin && (
         <button
           onClick={onPin}
@@ -63,61 +64,61 @@ export function AirQualityCard({ data, updatedAt, onPin, isPinned = false }: Air
           className="absolute top-4 right-4 rounded-full p-1.5 bg-slate-700/60 text-slate-400 hover:text-sky-400 hover:bg-slate-700 transition-colors ring-1 ring-slate-600/60"
         >
           {isPinned
-            ? <PinOff className="size-3.5" />
-            : <Pin className="size-3.5" />
+            ? <PinOff className="size-3.5 md:size-4" />
+            : <Pin    className="size-3.5 md:size-4" />
           }
         </button>
       )}
 
-      {/* City / country header — pr-10 reserves space for the pin button */}
+      {/* City / country header */}
       <div>
-        <h2 className="text-xl font-semibold text-slate-100 pr-10">{city}</h2>
-        <p className="text-sm text-slate-400">{country}</p>
+        <Typography variant="cardTitle" as="h2" className="font-semibold text-slate-100 pr-10">{city}</Typography>
+        <Typography variant="cardSub"   as="p"  className="text-slate-400 mt-0.5">{country}</Typography>
       </div>
 
       {/* AQI row: status label (left) + numeric badge (right) */}
       <div className="flex items-center justify-between gap-3">
         <div className={cn(
-          'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium',
+          'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-medium',
           levelBg[level],
           levelText[level],
         )}>
-          <CircleAlert className="size-3.5" />
-          {aqiLabel(current.us_aqi)}
+          <CircleAlert className="size-3.5 md:size-4 shrink-0" />
+          <Typography variant="badge">{aqiLabel(current.us_aqi)}</Typography>
         </div>
         <div className={cn('rounded-xl px-3 py-1.5 ring-1 text-right shrink-0', levelText[level], levelBg[level])}>
           <div className="flex items-center justify-end gap-1">
-            <span className="text-xs font-medium uppercase tracking-wide">US AQI</span>
+            <Typography variant="badgeHdr" className="font-medium uppercase tracking-wide">US AQI</Typography>
             <Tooltip text="Air Quality Index. A 0 to 500 scale showing how clean or polluted the air is and what health effects may apply.">
-              <Info className="size-3.5 cursor-default text-white/70 hover:text-white transition-colors" />
+              <Info className="size-3.5 md:size-4 cursor-default text-white/70 hover:text-white transition-colors" />
             </Tooltip>
           </div>
-          <p className="text-2xl font-bold leading-tight">{current.us_aqi}</p>
+          <Typography variant="metricLg" as="p" className="font-bold leading-tight">{current.us_aqi}</Typography>
         </div>
       </div>
 
       <AQIScaleBar aqiValue={current.us_aqi} />
 
-      {/* AQI pollutant metrics grid */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Pollutant metrics grid */}
+      <div className="grid grid-cols-2 gap-3 md:gap-4">
         {aqiMetrics.map(({ Icon, label, tooltip, value, unit }) => (
-          <div key={label} className="rounded-xl bg-slate-900/60 p-3 space-y-1">
+          <div key={label} className="rounded-xl bg-slate-900/60 p-3 md:p-4 space-y-1">
             <div className="flex items-center gap-1.5 text-slate-400">
-              <Icon className="size-3.5" />
-              <span className="text-xs">{label}</span>
+              <Icon className="size-3.5 md:size-4 shrink-0" />
+              <Typography variant="metricLabel">{label}</Typography>
               <Tooltip text={tooltip}>
-                <Info className="size-3.5 cursor-default text-sky-500 hover:text-sky-300 transition-colors" />
+                <Info className="size-3.5 md:size-4 cursor-default text-sky-500 hover:text-sky-300 transition-colors" />
               </Tooltip>
             </div>
-            <p className="text-lg font-semibold text-slate-100">
-              {value.toFixed(1)}
-              <span className="text-xs text-slate-500 ml-1">{unit}</span>
+            <p>
+              <Typography variant="metricMd" className="font-semibold text-slate-100">{value.toFixed(1)}</Typography>
+              <Typography variant="metricUnit" className="text-slate-500 ml-1">{unit}</Typography>
             </p>
           </div>
         ))}
       </div>
 
-      {/* Weather section — only rendered when data is available */}
+      {/* Weather section */}
       {weather && (
         <>
           <div className="border-t border-slate-700/60" />
@@ -125,9 +126,9 @@ export function AirQualityCard({ data, updatedAt, onPin, isPinned = false }: Air
         </>
       )}
 
-      <p className="text-xs text-slate-500 text-right">
+      <Typography variant="caption" as="p" className="text-slate-500 text-right">
         Updated {new Date(updatedAt).toLocaleTimeString()}
-      </p>
+      </Typography>
     </div>
   );
 }

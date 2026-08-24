@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Typography } from './components/Typography/Typography';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SearchBar } from './components/SearchBar/SearchBar';
 import { AirQualityCard } from './components/AirQualityCard';
@@ -66,10 +67,12 @@ function AirQualityApp() {
         <header className="flex items-center gap-3">
           <Logo size={40} />
           <div>
-            <h1 className="text-2xl font-bold text-sky-400 tracking-tight leading-none">
+            <Typography variant="appTitle" as="h1" className="font-bold text-sky-400 tracking-tight leading-none">
               AtmoSentry
-            </h1>
-            <p className="text-xs text-slate-500 mt-0.5">Real-time air quality & weather</p>
+            </Typography>
+            <Typography variant="appSub" as="p" className="text-slate-500 mt-0.5">
+              Real-time air quality & weather
+            </Typography>
           </div>
         </header>
 
