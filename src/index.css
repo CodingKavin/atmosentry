@@ -3,5 +3,8 @@
 @theme {
   --color-aqi-good: #22c55e;
   --color-aqi-mod:  #f59e0b;
+  --color-aqi-usg:  #f97316;
   --color-aqi-bad:  #ef4444;
+  --color-aqi-vbad: #a855f7;
+  --color-aqi-haz:  #7e0023;
 }
