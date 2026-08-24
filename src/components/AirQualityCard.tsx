@@ -1,6 +1,8 @@
-import { Wind, Cloud, Droplets, Sun, CircleAlert, Pin, PinOff } from 'lucide-react';
+import { Wind, Cloud, Droplets, Sun, CircleAlert, Pin, PinOff, Info } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { WeatherStats } from './WeatherStats/WeatherStats';
+import { AQIScaleBar } from './AQIScaleBar/AQIScaleBar';
+import { Tooltip } from './Tooltip/Tooltip';
 import type { EnvironmentalData } from '../hooks/useEnvironmentalData';
 
 type AqiLevel = 'good' | 'mod' | 'bad';
@@ -44,10 +46,10 @@ export function AirQualityCard({ data, updatedAt, onPin, isPinned = false }: Air
   const level = aqiLevel(current.us_aqi);
 
   const aqiMetrics = [
-    { Icon: Wind,     label: 'PM2.5', value: current.pm2_5,            unit: 'µg/m³' },
-    { Icon: Cloud,    label: 'PM10',  value: current.pm10,             unit: 'µg/m³' },
-    { Icon: Droplets, label: 'NO₂',   value: current.nitrogen_dioxide, unit: 'µg/m³' },
-    { Icon: Sun,      label: 'O₃',    value: current.ozone,            unit: 'µg/m³' },
+    { Icon: Wind,     label: 'PM2.5', tooltip: 'Fine particles 2.5µm or smaller. The most harmful to lung health.',          value: current.pm2_5,            unit: 'µg/m³' },
+    { Icon: Cloud,    label: 'PM10',  tooltip: 'Coarse particles 10µm or smaller. Includes dust, pollen and mould.',          value: current.pm10,             unit: 'µg/m³' },
+    { Icon: Droplets, label: 'NO₂',   tooltip: 'Nitrogen dioxide from vehicle exhaust and combustion.',                       value: current.nitrogen_dioxide, unit: 'µg/m³' },
+    { Icon: Sun,      label: 'O₃',    tooltip: 'Ground-level ozone formed when sunlight reacts with other pollutants.',       value: current.ozone,            unit: 'µg/m³' },
   ];
 
   return (
@@ -84,18 +86,28 @@ export function AirQualityCard({ data, updatedAt, onPin, isPinned = false }: Air
           {aqiLabel(current.us_aqi)}
         </div>
         <div className={cn('rounded-xl px-3 py-1.5 ring-1 text-right shrink-0', levelText[level], levelBg[level])}>
-          <span className="text-xs font-medium uppercase tracking-wide">US AQI</span>
+          <div className="flex items-center justify-end gap-1">
+            <span className="text-xs font-medium uppercase tracking-wide">US AQI</span>
+            <Tooltip text="Air Quality Index. A 0 to 500 scale showing how clean or polluted the air is and what health effects may apply.">
+              <Info className="size-3.5 cursor-default text-white/70 hover:text-white transition-colors" />
+            </Tooltip>
+          </div>
           <p className="text-2xl font-bold leading-tight">{current.us_aqi}</p>
         </div>
       </div>
 
+      <AQIScaleBar aqiValue={current.us_aqi} />
+
       {/* AQI pollutant metrics grid */}
       <div className="grid grid-cols-2 gap-3">
-        {aqiMetrics.map(({ Icon, label, value, unit }) => (
+        {aqiMetrics.map(({ Icon, label, tooltip, value, unit }) => (
           <div key={label} className="rounded-xl bg-slate-900/60 p-3 space-y-1">
             <div className="flex items-center gap-1.5 text-slate-400">
               <Icon className="size-3.5" />
               <span className="text-xs">{label}</span>
+              <Tooltip text={tooltip}>
+                <Info className="size-3.5 cursor-default text-sky-500 hover:text-sky-300 transition-colors" />
+              </Tooltip>
             </div>
             <p className="text-lg font-semibold text-slate-100">
               {value.toFixed(1)}
