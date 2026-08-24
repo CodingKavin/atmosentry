@@ -23,18 +23,18 @@ export type TypographyVariant =
 
 const scale: Record<TypographyVariant, string> = {
   appTitle:    'text-2xl  md:text-3xl',
-  appSub:      'text-xs   md:text-sm',
+  appSub:      'text-base md:text-lg',
   cardTitle:   'text-xl   md:text-2xl  lg:text-3xl',
-  cardSub:     'text-sm   md:text-base',
+  cardSub:     'text-lg   md:text-xl',
   metricLg:    'text-2xl  md:text-3xl  lg:text-4xl',
   metricMd:    'text-lg   md:text-xl   lg:text-2xl',
-  metricSm:    'text-sm   md:text-base',
-  metricLabel: 'text-xs   md:text-sm',
-  metricUnit:  'text-xs   md:text-sm',
-  badge:       'text-sm   md:text-base',
-  badgeHdr:    'text-xs   md:text-sm',
-  scaleLbl:    'text-[10px] md:text-xs',
-  caption:     'text-xs   md:text-sm',
+  metricSm:    'text-lg   md:text-xl',
+  metricLabel: 'text-base md:text-lg',
+  metricUnit:  'text-base md:text-lg',
+  badge:       'text-lg   md:text-xl',
+  badgeHdr:    'text-base md:text-lg',
+  scaleLbl:    'text-sm   md:text-base',
+  caption:     'text-base md:text-lg',
 };
 
 interface TypographyProps {

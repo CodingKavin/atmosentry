@@ -12,7 +12,7 @@ const TIERS: { max: number; label: string; color: TierColor }[] = [
   { max: 100,      label: 'Moderate',  color: 'mod'  },
   { max: 150,      label: 'Sensitive', color: 'usg'  },
   { max: 200,      label: 'Unhealthy', color: 'bad'  },
-  { max: 300,      label: 'Very High', color: 'vbad' },
+  { max: 300,      label: 'Severe',    color: 'vbad' },
   { max: Infinity, label: 'Hazardous', color: 'haz'  },
 ];
 

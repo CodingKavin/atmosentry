@@ -37,7 +37,7 @@ export function Tooltip({ text, children, className }: TooltipProps) {
         style={{ top: pos.top, left: pos.left, maxWidth: pos.maxWidth }}
         className={cn(
           'pointer-events-none fixed z-50 rounded-lg whitespace-normal min-w-32',
-          'bg-slate-900 px-3 py-2 text-xs leading-snug text-slate-100 text-left',
+          'bg-slate-900 px-3 py-2 text-base leading-snug text-slate-100 text-left',
           'ring-1 ring-slate-600 shadow-lg',
           'transition-opacity duration-150',
           visible ? 'opacity-100' : 'opacity-0',

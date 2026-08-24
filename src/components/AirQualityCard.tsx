@@ -86,11 +86,11 @@ export function AirQualityCard({ data, updatedAt, onPin, isPinned = false }: Air
           <CircleAlert className="size-3.5 md:size-4 shrink-0" />
           <Typography variant="badge">{aqiLabel(current.us_aqi)}</Typography>
         </div>
-        <div className={cn('rounded-xl px-3 py-1.5 ring-1 text-right shrink-0', levelText[level], levelBg[level])}>
-          <div className="flex items-center justify-end gap-1">
+        <div className={cn('rounded-xl px-3 py-1.5 ring-1 text-center shrink-0', levelText[level], levelBg[level])}>
+          <div className="flex items-center justify-center gap-1">
             <Typography variant="badgeHdr" className="font-medium uppercase tracking-wide">US AQI</Typography>
             <Tooltip text="Air Quality Index. A 0 to 500 scale showing how clean or polluted the air is and what health effects may apply.">
-              <Info className="size-3.5 md:size-4 cursor-default text-white/70 hover:text-white transition-colors" />
+              <Info className="size-3.5 md:size-4 cursor-default text-sky-500 hover:text-sky-300 transition-colors" />
             </Tooltip>
           </div>
           <Typography variant="metricLg" as="p" className="font-bold leading-tight">{current.us_aqi}</Typography>

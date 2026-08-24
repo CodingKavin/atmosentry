@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { AQIScaleBar } from './AQIScaleBar';
 
-const ALL_LABELS = ['Good', 'Moderate', 'Sensitive', 'Unhealthy', 'Very High', 'Hazardous'];
+const ALL_LABELS = ['Good', 'Moderate', 'Sensitive', 'Unhealthy', 'Severe', 'Hazardous'];
 
 // --- happy path ---
 
@@ -51,9 +51,9 @@ describe('AQIScaleBar', () => {
     expect(screen.getByRole('img', { name: /current level: Unhealthy/i })).toBeInTheDocument();
   });
 
-  it('highlights Very High at AQI 201', () => {
+  it('highlights Severe at AQI 201', () => {
     render(<AQIScaleBar aqiValue={201} />);
-    expect(screen.getByRole('img', { name: /current level: Very High/i })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: /current level: Severe/i })).toBeInTheDocument();
   });
 
   it('highlights Hazardous at AQI 301', () => {
