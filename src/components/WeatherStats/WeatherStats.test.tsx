@@ -22,7 +22,8 @@ describe('WeatherStats', () => {
 
   it('renders wind speed with km/h unit', () => {
     render(<WeatherStats data={fixture} />);
-    expect(screen.getByText('12.5 km/h')).toBeInTheDocument();
+    expect(screen.getByText('12.5')).toBeInTheDocument();
+    expect(screen.getByText('km/h')).toBeInTheDocument();
   });
 
   it('renders all three metric labels', () => {
