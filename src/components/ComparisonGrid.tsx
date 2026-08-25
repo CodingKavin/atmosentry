@@ -7,7 +7,7 @@ function PinnedCard({ location, onUnpin }: { location: GeoResult; onUnpin: () =>
   const { data, isLoading, isError, error, dataUpdatedAt } = useEnvironmentalData(location);
 
   return (
-    <div className="flex-1 min-w-72">
+    <div className="w-full lg:flex-1 lg:min-w-72">
       {isLoading && <AQISkeleton />}
 
       {isError && (
@@ -30,7 +30,7 @@ interface ComparisonGridProps {
 
 export function ComparisonGrid({ locations, onUnpin }: ComparisonGridProps) {
   return (
-    <div className="flex flex-col md:flex-row gap-4 flex-wrap w-full">
+    <div className="flex flex-col lg:flex-row gap-4 flex-wrap w-full items-center lg:items-start">
       {locations.map(location => (
         <PinnedCard
           key={`${location.latitude}-${location.longitude}`}
